@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import br.com.question1.Test1.entity.ToDo;
-import br.com.question1.Test1.exceptions.ToDoAlreadyExistsException;
 import br.com.question1.Test1.repository.ToDoRepository;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,36 +18,34 @@ import lombok.Setter;
 public class ToDoService {
 
 	@Autowired
-	private ToDoRepository repository;
+	private ToDoRepository toDoRepository;
 
 	public List<ToDo> listAllToDo() {
-		return (List<ToDo>) repository.findAll();
+		return (List<ToDo>) toDoRepository.findAll();
 	}
 
-	public ToDo findById(int id) {
-		return repository.findById(id);
-
-	}
-
-	public ToDo insertToDo(ToDo toDo) throws ToDoAlreadyExistsException {
-
-		if (toDo.equals(null)) {
-			return repository.save(toDo);
+	public ToDo findToDoById(int id) {
+		ToDo toDo = toDoRepository.findById(id);
+		if (toDoRepository.findById(id) != null) {
 		}
+		return toDo;
 
-		throw new ToDoAlreadyExistsException();
 	}
 
-	public ToDo updateToDo(ToDo newToDo) {
+	public ToDo insertToDo(ToDo toDo) {
+		return toDoRepository.save(toDo);
 
-		ToDo toDo = repository.findById(newToDo.getId());
+	}
+
+	public ToDo updateToDo(int id, ToDo newToDo) {
+		ToDo toDo = this.toDoRepository.findById(id);
 		toDo.setName(newToDo.getName());
 		toDo.setIsComplete(newToDo.getIsComplete());
-		return repository.save(toDo);
+		return toDoRepository.save(toDo);
 	}
 
 	public void deleteToDoById(int id) {
-		repository.deleteById(id);
+		toDoRepository.deleteById(id);
 	}
 
 }

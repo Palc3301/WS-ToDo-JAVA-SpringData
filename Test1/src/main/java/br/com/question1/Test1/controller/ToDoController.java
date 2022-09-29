@@ -39,32 +39,36 @@ public class ToDoController {
 	}
 
 	@GetMapping("/{id}")
-	public ToDo getToDo(@PathVariable int id) {
-		ToDo toDo = service.findById(id);
-		return toDo;
+	public ResponseEntity<ToDo> getToDo(@PathVariable int id) {
+		ToDo toDo = service.findToDoById(id);
+		return new ResponseEntity<ToDo>(toDo,HttpStatus.OK);
 	}
 
-	@PostMapping
-	public ResponseEntity insertToDo(@RequestBody ToDo newToDo) {
+	@PostMapping()
+	public ResponseEntity<ToDo> insertToDo(@RequestBody ToDo toDo) {
+		service.insertToDo(toDo);
 
-		try {
-			service.insertToDo(newToDo);
-			return new ResponseEntity(HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
+		return new ResponseEntity<ToDo>(toDo, HttpStatus.CREATED);
 	}
 
-	@PutMapping
-	public ResponseEntity<ToDo> updateToDo(@PathVariable ToDo id) {
-		ToDo newToDo = service.updateToDo(id);
-		return new ResponseEntity<ToDo>(newToDo, HttpStatus.OK);
+	@PutMapping("/{id}")
+	public ResponseEntity<ToDo> updateToDo(@PathVariable int id, @RequestBody ToDo toDoEntrada) {
+		ToDo toDo = service.updateToDo(id, toDoEntrada);
+		return new ResponseEntity<ToDo>(toDo, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ToDo> deleteToDoById(@RequestBody int id) {
+	public ResponseEntity<ToDo> deleteToDoById(@PathVariable int id) {
 		service.deleteToDoById(id);
 		return new ResponseEntity<ToDo>(HttpStatus.NO_CONTENT);
 	}
 }
+
+
+
+
+
+
+
+
+
